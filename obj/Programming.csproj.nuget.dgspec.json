@@ -51,6 +51,10 @@
             "MonoGame.Framework.DesktopGL": {
               "target": "Package",
               "version": "[3.8.*, )"
+            },
+            "Optional": {
+              "target": "Package",
+              "version": "[4.0.0, )"
             }
           },
           "imports": [

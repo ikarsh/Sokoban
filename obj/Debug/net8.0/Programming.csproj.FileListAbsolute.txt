@@ -29,3 +29,6 @@ C:\Users\idoka.LT07254861\Documents\Programming\Sokoban\obj\Debug\net8.0\refint\
 C:\Users\idoka.LT07254861\Documents\Programming\Sokoban\obj\Debug\net8.0\Programming.pdb
 C:\Users\idoka.LT07254861\Documents\Programming\Sokoban\obj\Debug\net8.0\Programming.genruntimeconfig.cache
 C:\Users\idoka.LT07254861\Documents\Programming\Sokoban\obj\Debug\net8.0\ref\Programming.dll
+C:\Users\idoka.LT07254861\Documents\Programming\Sokoban\bin\Debug\net8.0\Content\allyourbase.xnb
+C:\Users\idoka.LT07254861\Documents\Programming\Sokoban\bin\Debug\net8.0\Optional.dll
+C:\Users\idoka.LT07254861\Documents\Programming\Sokoban\bin\Debug\net8.0\Content\block.xnb
