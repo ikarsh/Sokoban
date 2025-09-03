@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Net.Mime;
 using System.Runtime.Serialization;
+using System.Security.Cryptography;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -17,8 +18,8 @@ namespace Programming;
 static class Config
 {
     public const int SQUARE_SIZE = 70;
-    public const int SCR_WID = 10;
-    public const int SCR_HEI = 8;
+    public const int SCR_WID = 14;
+    public const int SCR_HEI = 12;
 
     public const double MOVE_DELAY_MS = 30;
 }
@@ -141,17 +142,81 @@ class Character : Sprite
 
 class Block : Sprite
 {
-    Texture2D texture;
+    Texture2D closed;
+    Texture2D open_top;
+    Texture2D open_top_left;
+    Texture2D open_top_bottom;
+    Texture2D open_top_left_bottom;
+    Texture2D open;
+    
 
     public Block(ContentManager content, List<Point> points) : base(points)
     {
-        texture = content.Load<Texture2D>("allyourbase");
+        closed = content.Load<Texture2D>("block/closed");
+        open_top = content.Load<Texture2D>("block/open_top");
+        open_top_left = content.Load<Texture2D>("block/open_top_left");
+        open_top_bottom = content.Load<Texture2D>("block/open_top_bottom");
+        open_top_left_bottom = content.Load<Texture2D>("block/open_top_left_bottom");
+        open = content.Load<Texture2D>("block/open");
     }
     public override void Draw(SpriteBatch g)
     {
         foreach (Point point in points)
         {
-            g.Draw(texture, new Rectangle(point.X * Config.SQUARE_SIZE, point.Y * Config.SQUARE_SIZE, Config.SQUARE_SIZE, Config.SQUARE_SIZE), Color.White);
+            var directions = new[] { Direction.Left, Direction.Right, Direction.Down, Direction.Up };
+            var bits = directions.Select(d => d.OffsetPoint(point) is Point p && points.Contains(p)).ToList();
+            int pattern = bits.Select((b, i) => b ? 1 << i : 0).Sum();
+
+            // up down right left
+            var texture_rot = pattern switch
+            {
+                0b0000 => (closed, 0),
+                0b1000 => (open_top, 0),
+                0b0100 => (open_top, 2),
+                0b0010 => (open_top, 3),
+                0b0001 => (open_top, 1),
+                0b1100 => (open_top_bottom, 0),
+                0b0011 => (open_top_bottom, 1),
+                0b1010 => (open_top_left, 3),
+                0b1001 => (open_top_left, 0),
+                0b0110 => (open_top_left, 2),
+                0b0101 => (open_top_left, 1),
+                0b1110 => (open_top_left_bottom, 2),
+                0b1101 => (open_top_left_bottom, 0),
+                0b1011 => (open_top_left_bottom, 3),
+                0b0111 => (open_top_left_bottom, 1),
+                0b1111 => (open, 0),
+                _ => throw new UnreachableException(),
+            };
+
+
+            Texture2D texture = texture_rot.Item1;
+            int rot = texture_rot.Item2;
+
+
+            // Use position + scale instead of Rectangle
+            Vector2 position = new Vector2(
+                point.X * Config.SQUARE_SIZE + Config.SQUARE_SIZE/2,  // Center of square
+                point.Y * Config.SQUARE_SIZE + Config.SQUARE_SIZE/2
+            );
+            
+            Vector2 scale = new Vector2(
+                (float)Config.SQUARE_SIZE / texture.Width,   // Scale to fit square
+                (float)Config.SQUARE_SIZE / texture.Height
+            );
+            
+            g.Draw(
+                texture,
+                // new Rectangle(point.X * Config.SQUARE_SIZE, point.Y * Config.SQUARE_SIZE, Config.SQUARE_SIZE, Config.SQUARE_SIZE),
+                position,
+                null,
+                Color.White,
+                MathHelper.ToRadians(-rot * 90),
+                new Vector2(texture.Width/2, texture.Height/2),
+                scale,
+                SpriteEffects.None,
+                0f
+            );
         }
     }
 
@@ -193,13 +258,31 @@ public class Game1 : Game
 
         // TODO: use this.Content to load your game content here
         character = new Character(Content, new Point(0, 0));
-        sprites.Add(character);
-        sprites.Add(new Block(Content, new List<Point>
-        {
-            new Point(4 , 3),
-            new Point(4 , 4 ),
-            new Point(5 , 4 )
-        }));
+        sprites = new List<Sprite> {
+            character,
+            new Block(Content, new List<Point> {
+                new Point(4, 3),
+                new Point(4, 4),
+                new Point(5, 4)
+            }),
+            new Block(Content, new List<Point> {
+                new Point(7, 2),
+                new Point(7, 3)
+            }),
+
+            new Block(Content, new List<Point> {
+                new Point(6, 7),
+                new Point(7, 7),
+                new Point(8, 7),
+                new Point(8, 8),
+                new Point(8, 9),
+                new Point(9, 9),
+                new Point(10, 9),
+                new Point(11, 9),
+                new Point(11, 8),
+                new Point(11, 7),
+            })
+        };
     }
 
     protected override void Update(GameTime gameTime)

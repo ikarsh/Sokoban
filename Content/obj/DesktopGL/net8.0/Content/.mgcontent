@@ -6,8 +6,20 @@
   <SourceFiles>
     <File>C:/Users/idoka.LT07254861/Documents/Programming/Sokoban/Content/allyourbase.jpg</File>
     <File>C:/Users/idoka.LT07254861/Documents/Programming/Sokoban/Content/block.jpg</File>
+    <File>C:/Users/idoka.LT07254861/Documents/Programming/Sokoban/Content/block/closed.png</File>
+    <File>C:/Users/idoka.LT07254861/Documents/Programming/Sokoban/Content/block/open_top.png</File>
+    <File>C:/Users/idoka.LT07254861/Documents/Programming/Sokoban/Content/block/open_top_left.png</File>
+    <File>C:/Users/idoka.LT07254861/Documents/Programming/Sokoban/Content/block/open_top_bottom.png</File>
+    <File>C:/Users/idoka.LT07254861/Documents/Programming/Sokoban/Content/block/open_top_left_bottom.png</File>
+    <File>C:/Users/idoka.LT07254861/Documents/Programming/Sokoban/Content/block/open.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
   </DestFiles>
